@@ -1,46 +1,42 @@
 import * as React from 'react';
 import './PhotoGallery.css';
 
-export default class PhotoGallery extends React.Component<{}, { photoUrls: string[] }> {
+export default class PhotoGallery extends React.Component<{ imageUrls: string[] }, { inFullView: boolean }> {
 
-    input: HTMLInputElement;
+    fullViewCanvas: HTMLCanvasElement;
 
     constructor() {
         super();
-        this.readPhotos = this.readPhotos.bind(this);
+        this.enterFullView = this.enterFullView.bind(this);
         this.state = {
-            photoUrls: []
+            inFullView: false
         };
     }
 
     render() {
         return (
             <div>
-                <input
-                    type="file"
-                    name="file"
-                    accept="image/*"
-                    multiple={true}
-                    ref={input => { this.input = input as HTMLInputElement; }}
-                    onChange={this.readPhotos}
-                    id="in"
+                <canvas
+                    className={'full-view ' + (this.state.inFullView ? 'active' : 'hidden')}
+                    ref={(canvas) => { this.fullViewCanvas = canvas as HTMLCanvasElement; }}
+                    width={window.innerWidth}
+                    height={window.innerHeight}
                 />
-                {this.state.photoUrls.map(url => <img key={url} src={url} className="photo"/>)}
+                {this.props.imageUrls.map((url, index) =>
+                    <canvas
+                        key={index}
+                        className="thumbnail"
+                        style={{ backgroundImage: `url(${url})` }}
+                        onClick={this.enterFullView}
+                    />)}
             </div>
         );
     }
 
-    readPhotos() {
-        let fileList = this.input.files;
-        let fileArray: File[] = Array.prototype.slice.call(fileList);
-        fileArray.forEach(f => {
-            let reader = new FileReader();
-            reader.onload = () => {
-                this.setState((prevState) => ({
-                    photoUrls: prevState.photoUrls.concat(reader.result as string)
-                }));
-            };
-            reader.readAsDataURL(f);
-        });
+    enterFullView() {
+        this.setState(prevSate => ({
+            inFullView: !prevSate.inFullView
+        }));
     }
+
 }

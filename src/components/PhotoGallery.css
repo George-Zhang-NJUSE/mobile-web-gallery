@@ -1,4 +1,48 @@
-.photo {
-    width: 50%;
-    height: auto;
+.gallery {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.thumbnail {
+    margin-top: 0.5vw;
+    margin-left: 0.5vw;
+    width: 24.375vw;
+    height: 24.375vw;
+    background-size: cover;
+    background-position: center;
+    display: inline-block;
+    transition: all 0.3s;
+    animation: fade-in 0.4s ease-out;
+}
+
+.thumbnail:nth-child(4n) {
+    margin-right: 0.5vw;
+}
+
+.thumbnail:active {
+    opacity: 0.7;
+}
+
+.full-view {
+    position: absolute;
+    z-index: 1;
+    transition: all 0.3s ease-out;
+}
+
+canvas.hidden {
+    visibility: hidden;
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+canvas.active {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    background: gray;
 }
